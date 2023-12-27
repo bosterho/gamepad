@@ -1,8 +1,12 @@
+const winningScore = 7
+
 let xbox_gamepadIndex = -1;
 let msi_gamepadIndex = -1;
 let player1, player2
 let x1, y1, x2, y2, x3, y3, x4, y4
 let player
+let players = []
+
 
 let respawnSound;
 function preload() {
@@ -19,7 +23,7 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background(color(30, 30, 30, 225));
 
   // Check for the gamepad state on each frame
   const gamepads = navigator.getGamepads();
@@ -34,7 +38,6 @@ function draw() {
       } else if (gamepad.id.includes('msi') && msi_gamepadIndex === -1) {
         msi_gamepadIndex = gamepad.index;
       }
-      let players = []
       players[xbox_gamepadIndex] = player1
       players[msi_gamepadIndex] = player2
     }
@@ -59,7 +62,7 @@ function draw() {
 
         // A button
         if (buttons[0].pressed) {
-          player.pokerLength = 150
+          player.pokerLength = 180
         }
         // B button
         if (buttons[1].pressed) {
@@ -71,17 +74,38 @@ function draw() {
         }
 
         player.rotate(gamepads[gamepad.index])
-        player.move(gamepads[gamepad.index])
         player.poker()
+        player.move(gamepads[gamepad.index])
         if (pokingBody(player, otherPlayer) == true) {
           if (pokingShield(player, otherPlayer) == false) {
             respawn(otherPlayer)
+            player.score += 1
           }
         }
 
-        player.draw()
+        let winner = null
+        if (players[xbox_gamepadIndex].score >= winningScore) {
+          winner = "Red"
+        }
+        if (players[msi_gamepadIndex].score >= winningScore) {
+          winner = "Blue"
+        }
+        
+        if (!winner) {
+          player.draw()
+        } else {
+          text(winner + " Wins!", windowWidth / 2, windowHeight / 2)
+        }
       }
+
+      // Scoreboard
+      fill(255)
+      noStroke()
+      text("Red: " + players[xbox_gamepadIndex].score, 100, windowHeight - 50)
+      text("Blue: " + players[msi_gamepadIndex].score, windowWidth - 100, windowHeight - 50)
     });
+
+    // text(player, windowHeight - 50, 100,)
 
     
   } else {
