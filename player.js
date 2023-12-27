@@ -50,6 +50,7 @@ class Player{
       this.front_x2 = this.x + cos(this.angle + shield_width) * 40
       this.front_y2 = this.y + sin(this.angle + shield_width) * 40
     }
+
     rotate(gamepad) {
       // let a = gamepad.axes[2]
       // if (abs(a) > 0.05) {
@@ -60,6 +61,13 @@ class Player{
 			// this.rotSpeed *= 0.94
 			this.angle = atan2(this.y - this.prev_y, this.x - this.prev_x)
     }
+
+		poker() {
+			if (this.pokerLength > 60) {
+				this.pokerLength -= 3
+			}
+		}
+
   
     draw() {
 			fill(this.color)

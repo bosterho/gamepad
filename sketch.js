@@ -16,8 +16,6 @@ function setup() {
   player2 = new Player(color(0, 0, 255))
   respawn(player1)
   respawn(player2)
-  
-
 }
 
 function draw() {
@@ -25,6 +23,7 @@ function draw() {
 
   // Check for the gamepad state on each frame
   const gamepads = navigator.getGamepads();
+
   if (gamepads) {
     for (let i = 0; i < gamepads.length; i++) {
       const gamepad = gamepads[i];
@@ -60,30 +59,27 @@ function draw() {
 
         // A button
         if (buttons[0].pressed) {
-          player.pokerLength += 1
+          player.pokerLength = 150
         }
         // B button
         if (buttons[1].pressed) {
-          player.pokerLength -= 1
+          if (player.speedX < 10 && player.speedY < 10) {
+            player.speedX *= 1.2
+            player.speedY *= 1.2
+          }
+          
         }
 
         player.rotate(gamepads[gamepad.index])
         player.move(gamepads[gamepad.index])
-        // if (pokingShield(player, otherPlayer)) {
-        //   console.log("poking shield")
-        // }
-        // if (pokingBody(player, otherPlayer)) {
-        //   console.log("poked!")
-        // }
+        player.poker()
         if (pokingBody(player, otherPlayer) == true) {
-          // console.log(pokingShield(player, otherPlayer), gamepad.index)
           if (pokingShield(player, otherPlayer) == false) {
-            // console.log("respanw")
             respawn(otherPlayer)
           }
         }
-        player.draw()
 
+        player.draw()
       }
     });
 
