@@ -64,8 +64,8 @@ function draw() {
         // B button
         if (buttons[1].pressed) {
           if (player.speedX < 10 && player.speedY < 10) {
-            player.speedX *= 1.2
-            player.speedY *= 1.2
+            player.speedX *= 1.1
+            player.speedY *= 1.1
           }
           
         }
