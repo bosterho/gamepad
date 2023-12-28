@@ -6,6 +6,7 @@ class Player{
 			this.prev_x = 0
 			this.prev_y = 0
       this.angle = 0
+      this.cur_angle = 0
       this.pokerLength = 60
       this.pokerTipX = 0
       this.pokerTipY = 0
@@ -18,36 +19,52 @@ class Player{
 			this.speedY = 0
 			this.rotSpeed = 0
 			this.score = 0
+			this.smoothDx = 0
+			this.smoothDy = 0
+			this.dx = 0
+			this.dy = 0
+			this.yAxis = 0
     }
     move(gamepad) {
       if (abs(gamepad.axes[0]) > 0.1) {
-				this.speedX += gamepad.axes[0] * 0.1
+				this.speedX += gamepad.axes[0] * 0.2
       }
   
       if (abs(gamepad.axes[1]) > 0.01) {
-				this.speedY += gamepad.axes[1] * 0.1
+				this.speedY += gamepad.axes[1] * 0.2
       }
 
 			// if (abs(gamepad.axes[2]) > 0.01) {
 			// 	this.speedX += gamepad.axes[2] * 0.1
       // }
 
-			let yAxis = 3
+			this.yAxis = 3
 			if (gamepad.index == msi_gamepadIndex) {
-				yAxis = 5
+				this.yAxis = 5
 			}
-			// if (abs(gamepad.axes[yAxis]) > 0.1) {
-			// 	this.speedY += gamepad.axes[yAxis] * 0.1
+			// if (abs(gamepad.axes[this.yAxis]) > 0.1) {
+			// 	this.speedY += gamepad.axes[this.yAxis] * 0.1
       // }
 
-			// bounce off walls side to side
-			if (this.x + (this.bodySize/2) > windowWidth || this.x - (this.bodySize/2) < 0) {
-				this.speedX = -this.speedX
+			
+			// bounce off left wall
+			if (this.x - (this.bodySize/2) < 0) {
+				this.speedX = abs(this.speedX) * bounciness
 			}
 
-			// bounce off walls up and
-			if (this.y + (this.bodySize/2) > windowHeight || this.y - (this.bodySize/2) < 0) {
-				this.speedY = -this.speedY
+			// bounce off right wall
+			if (this.x + (this.bodySize/2) > windowWidth) {
+				this.speedX = -abs(this.speedX) * bounciness
+			}
+
+			// bounce off bottom wall
+			if (this.y + (this.bodySize/2) > windowHeight) {
+				this.speedY = -abs(this.speedY) * bounciness
+			}
+
+			// bounce off top wall
+			if (this.y - (this.bodySize/2) < 0) {
+				this.speedY = abs(this.speedY) * bounciness
 			}
 
 			this.prev_x = this.x
@@ -74,23 +91,38 @@ class Player{
 			// this.angle += this.rotSpeed
 
 			// this.rotSpeed *= 0.94
-			let yAxis = 3
+			this.yAxis = 3
 			if (gamepad.index == msi_gamepadIndex) {
-				yAxis = 5
+				this.yAxis = 5
 			}
 
-			let rightThumbstickActive = false
-			if (abs(gamepad.axes[2] > 0.1) || abs(gamepad.axes[yAxis] > 0.1)) {
-				rightThumbstickActive = true
-			}
+			// rightThumbstick = false
+			// if (abs(gamepad.axes[2] > 0.1) || abs(gamepad.axes[this.yAxis]) > 0.1) {
+			// 	rightThumbstickActive = true
+			// }
+			// if (rightThumbstickActive) {
+				// this.angle = atan2(gamepad.axes[this.yAxis], gamepad.axes[2])
+				// this.angle += (gamepad.axes[this.yAxis] * gamepad.axes[2]) * 0.1
+			// } else {
+				// this.angle = atan2(this.y - this.prev_y, this.x - this.prev_x)
+			// }
+			this.angle += (gamepad.axes[this.yAxis]) * 0.1
+			this.angle += (gamepad.axes[2]) * 0.1
 
-			let smoothed_y = this.y - this.prev_y
-			let smoothed_x = this.x - this.prev_x
-			// smoothed_y *= map(gamepad.axes[yAxis], 0, -1, 0, 0.01)
-			smoothed_y *= 0.01
-			smoothed_x *= 0.01
-			this.angle = atan2(smoothed_y, smoothed_x)
 			
+			
+
+			// this.cur_angle = atan2(this.y - this.prev_y, this.x - this.prev_x)
+			// this.angle += (this.cur_angle - this.angle) * 0.1
+			// console.log(this.angle)
+
+			// this.dx = this.x - this.prev_x
+			// this.dy = this.y - this.prev_y
+			// console.log(this.speedX)
+			// this.smoothDx = this.smoothDx + (this.dx - this.smoothDx) * map(abs(this.speedX), 0, 3, 0.1, 0.005)
+			// this.smoothDy = this.smoothDy + (this.dy - this.smoothDy) * map(abs(this.speedY), 0, 3, 0.1, 0.005)
+			// this.angle = atan2(this.smoothDy, this.smoothDx)
+
     }
 
 		poker() {

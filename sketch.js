@@ -1,4 +1,5 @@
 const winningScore = 7
+const bounciness = 0.5
 
 let xbox_gamepadIndex = -1;
 let msi_gamepadIndex = -1;
@@ -23,7 +24,7 @@ function setup() {
 }
 
 function draw() {
-  background(color(30, 30, 30, 225));
+  background(30);
 
   // Check for the gamepad state on each frame
   const gamepads = navigator.getGamepads();
@@ -60,17 +61,23 @@ function draw() {
       if (player !== null) {
         const buttons = gamepad.buttons
 
-        // A button
-        if (buttons[0].pressed) {
-          player.pokerLength = 180
-        }
-        // B button
-        if (buttons[1].pressed) {
-          if (player.speedX < 10 && player.speedY < 10) {
-            player.speedX *= 1.1
-            player.speedY *= 1.1
+        if (gamepad.index == msi_gamepadIndex) {
+
+          // right trigger
+          if (buttons[9].pressed) {
+            player.pokerLength += 10
           }
-          
+          if (gamepad.index == xbox_gamepadIndex) {
+
+          }
+
+          // left trigger
+          if (buttons[8].pressed) {
+            if (player.speedX < 10 && player.speedY < 10) {
+              player.speedX *= 1.1
+              player.speedY *= 1.1
+            }
+          }
         }
 
         player.rotate(gamepads[gamepad.index])
@@ -82,6 +89,8 @@ function draw() {
             player.score += 1
           }
         }
+        // fill(256)
+        // circle(gamepad.axes[0] * 0.5 * windowHeight + 0.5 * windowHeight, gamepad.axes[1] * 0.5 * windowHeight + 0.5 * windowHeight, 10)
 
         let winner = null
         if (players[xbox_gamepadIndex].score >= winningScore) {

@@ -34,15 +34,15 @@ function doLinesIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
     }
   
     // Return null if lines don't intersect or are coincident
-    return intersect;
+    return intersect
   }
 
 function pokingShield(player, otherPlayer) {
     return doLinesIntersect(
         player.x, 
         player.y,
-        player.x + player.pokerLength * cos(player.angle),
-        player.y + player.pokerLength * sin(player.angle),
+        player.pokerTipX,
+        player.pokerTipY,
         otherPlayer.front_x1,
         otherPlayer.front_y1,
         otherPlayer.front_x2,
@@ -57,4 +57,3 @@ function pokingBody(player, otherPlayer) {
         return false
     }
 }
-
